@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code Editor with Monaco</title>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs/editor/editor.main.min.css">
+  <style>
+    #editor-container {
+      height: 400px;
+      width: 50%;
+      float: left;
+    }
+    #output-container {
+      height: 400px;
+      width: 50%;
+      float: left;
+      background-color: rgb(35, 34, 34);
+      color: #ffff;
+    }
+    #btn-container {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="btn-container">
+    <select id="language-selector">
+      <option value="javascript">JavaScript</option>
+      <option value="python">Python</option>
+      <option value="java">Java</option>
+      <option value="cpp">C++</option>
+      <option value="c">C</option>
+    </select>
+    <button id="convert-btn">Convert</button>
+    <button id="debug-btn">Debug</button>
+    <button id="quality-check-btn">Quality Check</button>
+  </div>
+  <div id="editor-container"></div>
+  <div id="output-container">
+    <h1>Output</h1>
+    <div id="output_content">
+
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs/loader.min.js"></script>
+  <script>
+    let editor;
+
+    const onGotAmdLoader = () => {
+      // Load the Monaco Editor library
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs' }});
+      require(['vs/editor/editor.main'], () => {
+        // Monaco Editor is now available
+        editor = monaco.editor.create(document.getElementById('editor-container'), {
+          value: 'console.log("Hello, World!");',
+          language: 'javascript',
+          theme: 'vs-dark',
+        });
+      });
+    };
+
+    // Load AMD loader if necessary
+    if (typeof require === 'undefined') {
+      const loaderScript = document.createElement('script');
+      loaderScript.type = 'text/javascript';
+      loaderScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs/loader.min.js';
+      loaderScript.addEventListener('load', onGotAmdLoader);
+      document.body.appendChild(loaderScript);
+    } else {
+      onGotAmdLoader();
+    }
+
+    // Button click event handlers
+    document.getElementById('convert-btn').addEventListener('click', () => {
+      const language = document.getElementById('language-selector').value;
+      const code = editor.getValue();
+      console.log({
+        language, 
+        code
+      });
+      // Implement your conversion logic here
+      // For demonstration purposes, we'll just display the converted code in the output div
+      document.getElementById('output-container').innerText = `Converted ${language} code:\n${code}`;
+    });
+
+    document.getElementById('debug-btn').addEventListener('click', () => {
+      // Implement your debug logic here
+      document.getElementById('output-container').innerText = 'Debugging...';
+    });
+
+    document.getElementById('quality-check-btn').addEventListener('click', () => {
+      // Implement your quality check logic here
+      document.getElementById('output-container').innerText = 'Quality Check Passed!';
+    });
+  </script>
+</body>
+</html>
