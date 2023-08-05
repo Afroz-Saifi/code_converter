@@ -48,7 +48,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs/loader.min.js"></script>
   <script>
     let editor;
-    const baseApi = 'http://localhost:8500'
+    // const baseApi = 'http://localhost:8500'
+    const baseApi = 'https://code-editor-9osk.onrender.com'
     const onGotAmdLoader = () => {
       // Load the Monaco Editor library
       require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs' }});
