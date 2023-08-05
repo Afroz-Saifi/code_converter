@@ -48,7 +48,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs/loader.min.js"></script>
   <script>
     let editor;
-
+    const baseApi = 'http://localhost:8500'
     const onGotAmdLoader = () => {
       // Load the Monaco Editor library
       require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs' }});
@@ -81,19 +81,57 @@
         language, 
         code
       });
+      fetch(`${baseApi}/convert`, {
+        method: "post",
+        body: JSON.stringify({language, code}),
+        headers: {'Content-type':'application/json'}
+      })
+      .then(res => res.json())
+      .then((data) => {
+            document.getElementById('output-container').innerText = `Converted ${language} code:\n${data.response}`;
+      })
+      .catch(error => {
+        console.log(error.message);
+      })
       // Implement your conversion logic here
       // For demonstration purposes, we'll just display the converted code in the output div
-      document.getElementById('output-container').innerText = `Converted ${language} code:\n${code}`;
+    //   document.getElementById('output-container').innerText = `Converted ${language} code:\n${code}`;
     });
 
     document.getElementById('debug-btn').addEventListener('click', () => {
       // Implement your debug logic here
+      const code = editor.getValue();
+      fetch(`${baseApi}/debug`, {
+        method: "post",
+        body: JSON.stringify({code}),
+        headers: {'Content-type':'application/json'}
+      })
+      .then(res => res.json())
+      .then((data) => {
+            document.getElementById('output-container').innerText = `${data.response}`;
+      })
+      .catch(error => {
+        console.log(error.message);
+      })
       document.getElementById('output-container').innerText = 'Debugging...';
     });
 
     document.getElementById('quality-check-btn').addEventListener('click', () => {
       // Implement your quality check logic here
-      document.getElementById('output-container').innerText = 'Quality Check Passed!';
+      const code = editor.getValue();
+      fetch(`${baseApi}/qualityCheck`, {
+        method: "post",
+        body: JSON.stringify({code}),
+        headers: {'Content-type':'application/json'}
+      })
+      .then(res => res.json())
+      .then((data) => {
+            document.getElementById('output-container').innerText = `${data.response}`;
+      })
+      .catch(error => {
+        console.log(error.message);
+      })
+      document.getElementById('output-container').innerText = 'Checking quality...';
     });
   </script>
 </body>
